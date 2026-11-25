@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://coundal.github.io/liveoutputs/sitemap.xml

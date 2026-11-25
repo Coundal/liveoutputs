@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stream Each OBS Source or Scene to Its Own RTMP/SRT Output | LiveOutputs</title>
+<meta name="description" content="OBS Studio plugin to stream individual sources or separate scenes to different platforms over RTMP, RTMPS or SRT. Independent clean feed outputs, live bitrate meter, auto-reconnect. Free 14-day trial.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LiveOutputs">
+<meta property="og:title" content="Stream Each OBS Source or Scene to Its Own RTMP/SRT Output | LiveOutputs">
+<meta property="og:description" content="OBS Studio plugin to stream individual sources or separate scenes to different platforms over RTMP, RTMPS or SRT. Independent clean feed outputs, live bitrate meter, auto-reconnect. Free 14-day trial.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "LiveOutputs", "applicationCategory": "MultimediaApplication", "operatingSystem": "Windows 10, Windows 11", "description": "Plugin for OBS Studio that sends each scene or source to its own RTMP, RTMPS or SRT destinations, independently.", "inLanguage": "en"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does it affect my main stream or recording?", "acceptedAnswer": {"@type": "Answer", "text": "No. Each input has its own independent pipeline, so your main stream and recording are not touched."}}, {"@type": "Question", "name": "Will it use a lot of CPU or GPU?", "acceptedAnswer": {"@type": "Answer", "text": "Each active input encodes its own video, so load grows with the number of inputs. You can choose a GPU encoder (NVENC and others) to keep the CPU free."}}, {"@type": "Question", "name": "What happens when the trial ends?", "acceptedAnswer": {"@type": "Answer", "text": "Streaming stops until you enter a license key. Your configuration stays saved."}}, {"@type": "Question", "name": "Which platforms can I stream to?", "acceptedAnswer": {"@type": "Answer", "text": "Any service that accepts RTMP, RTMPS or SRT, using the address and key they give you."}}, {"@type": "Question", "name": "Does it need an account or internet to activate?", "acceptedAnswer": {"@type": "Answer", "text": "No. License keys are checked on your computer; no account and no server are needed."}}]}]</script>
+<link rel="canonical" href="https://coundal.github.io/liveoutputs/">
+<link rel="alternate" hreflang="en" href="https://coundal.github.io/liveoutputs/">
+<link rel="alternate" hreflang="es" href="https://coundal.github.io/liveoutputs/es/">
+<link rel="alternate" hreflang="x-default" href="https://coundal.github.io/liveoutputs/">
+<meta property="og:url" content="https://coundal.github.io/liveoutputs/">
+<style>
+:root{--bg:#0e1015;--bg2:#13161d;--card:#181c25;--text:#e8eaf0;--muted:#9aa3b2;--accent:#4f8cff;--accent2:#7c5cff;--ok:#3fb950;--line:#262b36}
+@media (prefers-color-scheme:light){:root{--bg:#fafbfd;--bg2:#f1f4f9;--card:#fff;--text:#14171f;--muted:#566070;--accent:#2563eb;--accent2:#6d4aff;--ok:#1f8a3a;--line:#e2e6ec}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+.logo{font-weight:800;font-size:19px;color:var(--text);text-decoration:none}
+.logo b{color:var(--accent)}
+.links{display:flex;gap:20px;align-items:center}
+.links a{color:var(--muted);text-decoration:none;font-size:15px}
+.links a:hover{color:var(--text)}
+.links .cta{background:var(--accent);color:#fff;padding:8px 16px;border-radius:8px;font-weight:600}
+.links .cta:hover{color:#fff;opacity:.9}
+@media (max-width:760px){.links a:not(.cta):not(.lang){display:none}}
+section{padding:72px 0}
+.alt{background:var(--bg2)}
+h1{font-size:clamp(32px,6vw,56px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(26px,4vw,36px);margin:0 0 10px;text-align:center;letter-spacing:-.01em}
+.sub{color:var(--muted);text-align:center;max-width:640px;margin:0 auto 40px}
+.hero{padding:72px 0 56px;text-align:center}
+.lead{color:var(--muted);font-size:19px;max-width:700px;margin:0 auto 28px}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:14px 28px;border-radius:10px}
+.btn:hover{opacity:.92}
+.btn.alt2{background:transparent;color:var(--text);border:1px solid var(--line);margin-left:8px}
+.note{color:var(--muted);font-size:14px}
+.mock{margin:44px auto 0;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mock .bar{font-size:13px;color:var(--muted);margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:14px;gap:8px;flex-wrap:wrap}
+.row small{color:var(--muted)}
+.live{color:var(--ok);font-weight:600;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card p{margin:0;color:var(--muted)}
+.ico{font-size:26px;margin-bottom:8px}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.step::before{counter-increment:s;content:counter(s);display:inline-flex;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;align-items:center;justify-content:center;margin-bottom:10px}
+.step p{margin:0;color:var(--muted)}
+.price{max-width:520px;margin:0 auto;text-align:center}
+.price ul{list-style:none;padding:0;margin:16px 0 22px;text-align:left;display:inline-block}
+.price li{padding:3px 0}
+.price li::before{content:"✓ ";color:var(--ok);font-weight:700}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:10px auto;max-width:760px}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:10px 0 0}
+.center{text-align:center}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
+@media (max-width:520px){.btn.alt2{margin:10px 0 0}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="logo" href="#top">Live<b>Outputs</b></a>
+<div class="links">
+<a href="#features">Features</a><a href="#usecases">Use cases</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+<a class="lang" href="es/">Español</a>
+<a class="cta" href="#download">Download</a>
+</div></div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+<h1>A different live destination for <em>every scene</em> or <em>every source</em> in OBS Studio</h1>
+<p class="lead">LiveOutputs is a plugin for OBS Studio. Send each scene or source to its own RTMP, RTMPS or SRT destinations, independently, without touching your main stream or recording.</p>
+<a class="btn" href="#download">Download free 14-day trial</a>
+<a class="btn alt2" href="#features">See features</a>
+<p class="note">Full version during the trial. No account, no credit card. Windows 10/11.</p>
+<div class="mock" aria-hidden="true">
+<div class="bar">LiveOutputs dock</div>
+<div class="row"><span><b>Camera 1</b> <small>(source)</small></span><span class="live">● 2 live</span></div>
+<div class="row"><span>Platform A · RTMPS</span><small>4.1 Mbps</small></div>
+<div class="row"><span>Platform B · SRT</span><small>3.9 Mbps</small></div>
+<div class="row"><span><b>Vertical scene</b> <small>(1080×1920)</small></span><span class="live">● 1 live</span></div>
+<div class="row"><span>Mobile platform · RTMP</span><small>4.0 Mbps</small></div>
+</div>
+</div></header>
+
+<section class="alt" id="features"><div class="wrap">
+<h2>Everything you need to multistream with control</h2>
+<p class="sub">Built for streamers and production teams who want each platform to get the right picture.</p>
+<div class="grid">
+<div class="card"><div class="ico">🎯</div><h3>One input, its own outputs</h3><p>Every input is a scene or a single source, each with its own list of destinations. Stream a camera to one platform and the full scene to another at the same time.</p></div>
+<div class="card"><div class="ico">📡</div><h3>RTMP, RTMPS and SRT</h3><p>Paste the address and the key. Ready-made templates for common platforms. SRT supports stream ID and passphrase.</p></div>
+<div class="card"><div class="ico">📱</div><h3>Vertical and custom sizes</h3><p>Send a 1080×1920 vertical version of a scene for mobile platforms while your main stream stays horizontal.</p></div>
+<div class="card"><div class="ico">🔀</div><h3>Follow the live scene</h3><p>Let an input follow the scene OBS has live, with your own scene-to-scene mappings. Switches without cutting the stream.</p></div>
+<div class="card"><div class="ico">🔁</div><h3>Automatic reconnection</h3><p>If a destination drops, LiveOutputs keeps retrying and shows a clear alert with the outage time, then tells you when it recovers.</p></div>
+<div class="card"><div class="ico">📊</div><h3>Live bitrate and preview</h3><p>See the real bitrate and dropped frames of every destination, and preview exactly what each input is sending.</p></div>
+<div class="card"><div class="ico">⚙️</div><h3>Your encoder, your settings</h3><p>Choose GPU (NVENC and others) or CPU x264, with the same advanced encoder options OBS offers. Save quality and audio profiles and reuse them.</p></div>
+<div class="card"><div class="ico">🛡️</div><h3>Safe by design</h3><p>Nothing streams on its own when OBS opens. Your configuration is never overwritten if it cannot be read.</p></div>
+</div></div></section>
+
+<section id="usecases"><div class="wrap">
+<h2>Stream each source separately in OBS</h2>
+<p class="sub">Three things people search for, solved in one plugin.</p>
+<div class="grid"><div class="card"><h3>Stream an individual source to RTMP</h3><p>Pick one camera, capture or media source and send only that source to its own RTMP or RTMPS destination, without stacking it in a scene first.</p></div><div class="card"><h3>Send separate scenes to different platforms</h3><p>Give each platform its own scene: the full layout to one, a clean camera to another, a vertical version to a third, all live at once.</p></div><div class="card"><h3>Clean feed output for OBS Studio</h3><p>Produce a clean feed of a source or scene, without overlays, over RTMP or SRT for a guest, a producer or a second venue.</p></div></div></div></section>
+
+<section class="alt" id="how"><div class="wrap">
+<h2>How it works</h2>
+<p class="sub">Up and running in a few minutes.</p>
+<div class="steps">
+<div class="step"><h3>Install</h3><p>Run the installer and restart OBS Studio.</p></div>
+<div class="step"><h3>Open the dock</h3><p>Go to <em>Docks → LiveOutputs</em>.</p></div>
+<div class="step"><h3>Add an input</h3><p>Click <em>Add input</em>, choose a scene or source and add its destinations.</p></div>
+<div class="step"><h3>Go live</h3><p>Press <em>Start</em> on each destination whenever you want.</p></div>
+</div></div></section>
+
+<section id="pricing"><div class="wrap">
+<h2>Pricing</h2>
+<p class="sub">Try everything first. Pricing will be announced at launch.</p>
+<div class="card price">
+<h3>14-day free trial</h3>
+<ul>
+<li>Every feature included</li>
+<li>No account, no credit card</li>
+<li>A license key keeps it running afterwards</li>
+</ul><br>
+<a class="btn" href="mailto:liveoutputs@protonmail.com?subject=LiveOutputs%20waitlist">Join the waitlist</a>
+<p class="note">Hear the price and launch date first.</p>
+</div></div></section>
+
+<section class="alt" id="download"><div class="wrap center">
+<h2>Download</h2>
+<p class="sub">Windows 10/11 (64-bit) and OBS Studio 31 or newer.</p>
+<a class="btn" href="LiveOutputs-1.0.0-Setup.exe">Download LiveOutputs 1.0.0 (Windows)</a>
+<p class="note"><strong>Windows may show an “unknown publisher” warning</strong> when you run the installer, because the plugin is not yet code-signed. Choose “More info → Run anyway”. Code signing is planned for a later release.</p>
+</div></section>
+
+<section id="faq"><div class="wrap">
+<h2>Questions</h2><p class="sub">&nbsp;</p>
+<details><summary>Does it affect my main stream or recording?</summary><p>No. Each input has its own independent pipeline, so your main stream and recording are not touched.</p></details>
+<details><summary>Will it use a lot of CPU or GPU?</summary><p>Each active input encodes its own video, so load grows with the number of inputs. You can choose a GPU encoder (NVENC and others) to keep the CPU free.</p></details>
+<details><summary>What happens when the trial ends?</summary><p>Streaming stops until you enter a license key. Your configuration stays saved.</p></details>
+<details><summary>Which platforms can I stream to?</summary><p>Any service that accepts RTMP, RTMPS or SRT, using the address and key they give you.</p></details>
+<details><summary>Does it need an account or internet to activate?</summary><p>No. License keys are checked on your computer; no account and no server are needed.</p></details>
+</div></section>
+
+<footer><div class="wrap">
+<p>LiveOutputs is an independent plugin for OBS Studio. It is not affiliated with, endorsed by or sponsored by the OBS Project. “OBS” and “OBS Studio” are used only to describe compatibility.</p>
+<p>Contact: <a href="mailto:liveoutputs@protonmail.com">liveoutputs@protonmail.com</a>. LiveOutputs is released under the GPL; the source code is available on request.</p>
+</div></footer>
+</body>
+</html>

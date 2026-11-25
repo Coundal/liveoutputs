@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emitir cada fuente o escena de OBS por su propio RTMP/SRT | LiveOutputs</title>
+<meta name="description" content="Plugin para OBS Studio: emite una fuente individual por RTMP o envía escenas diferentes a cada plataforma (RTMP, RTMPS, SRT). Señal limpia (clean feed) independiente, medidor de bitrate y reconexión. Prueba gratis 14 días.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LiveOutputs">
+<meta property="og:title" content="Emitir cada fuente o escena de OBS por su propio RTMP/SRT | LiveOutputs">
+<meta property="og:description" content="Plugin para OBS Studio: emite una fuente individual por RTMP o envía escenas diferentes a cada plataforma (RTMP, RTMPS, SRT). Señal limpia (clean feed) independiente, medidor de bitrate y reconexión. Prueba gratis 14 días.">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "LiveOutputs", "applicationCategory": "MultimediaApplication", "operatingSystem": "Windows 10, Windows 11", "description": "Plugin para OBS Studio que envía cada escena o fuente a sus propios destinos RTMP, RTMPS o SRT, de forma independiente.", "inLanguage": "es"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Afecta a mi directo principal o a mi grabación?", "acceptedAnswer": {"@type": "Answer", "text": "No. Cada entrada tiene su propio circuito independiente, así que tu directo y tu grabación no se tocan."}}, {"@type": "Question", "name": "¿Gasta mucha CPU o tarjeta gráfica?", "acceptedAnswer": {"@type": "Answer", "text": "Cada entrada activa codifica su propio vídeo, así que el consumo crece con el número de entradas. Puedes elegir codificador de tarjeta gráfica (NVENC y otros) para liberar la CPU."}}, {"@type": "Question", "name": "¿Qué pasa al acabar la prueba?", "acceptedAnswer": {"@type": "Answer", "text": "Las emisiones se detienen hasta que introduzcas una clave de licencia. Tu configuración sigue guardada."}}, {"@type": "Question", "name": "¿A qué plataformas puedo emitir?", "acceptedAnswer": {"@type": "Answer", "text": "A cualquiera que acepte RTMP, RTMPS o SRT, con la dirección y la clave que te den."}}, {"@type": "Question", "name": "¿Necesita cuenta o internet para activarse?", "acceptedAnswer": {"@type": "Answer", "text": "No. Las claves se comprueban en tu ordenador; no hace falta cuenta ni servidor."}}]}]</script>
+<link rel="canonical" href="https://coundal.github.io/liveoutputs/es/">
+<link rel="alternate" hreflang="en" href="https://coundal.github.io/liveoutputs/">
+<link rel="alternate" hreflang="es" href="https://coundal.github.io/liveoutputs/es/">
+<link rel="alternate" hreflang="x-default" href="https://coundal.github.io/liveoutputs/">
+<meta property="og:url" content="https://coundal.github.io/liveoutputs/es/">
+<style>
+:root{--bg:#0e1015;--bg2:#13161d;--card:#181c25;--text:#e8eaf0;--muted:#9aa3b2;--accent:#4f8cff;--accent2:#7c5cff;--ok:#3fb950;--line:#262b36}
+@media (prefers-color-scheme:light){:root{--bg:#fafbfd;--bg2:#f1f4f9;--card:#fff;--text:#14171f;--muted:#566070;--accent:#2563eb;--accent2:#6d4aff;--ok:#1f8a3a;--line:#e2e6ec}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+.logo{font-weight:800;font-size:19px;color:var(--text);text-decoration:none}
+.logo b{color:var(--accent)}
+.links{display:flex;gap:20px;align-items:center}
+.links a{color:var(--muted);text-decoration:none;font-size:15px}
+.links a:hover{color:var(--text)}
+.links .cta{background:var(--accent);color:#fff;padding:8px 16px;border-radius:8px;font-weight:600}
+.links .cta:hover{color:#fff;opacity:.9}
+@media (max-width:760px){.links a:not(.cta):not(.lang){display:none}}
+section{padding:72px 0}
+.alt{background:var(--bg2)}
+h1{font-size:clamp(32px,6vw,56px);line-height:1.1;margin:0 0 18px;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(26px,4vw,36px);margin:0 0 10px;text-align:center;letter-spacing:-.01em}
+.sub{color:var(--muted);text-align:center;max-width:640px;margin:0 auto 40px}
+.hero{padding:72px 0 56px;text-align:center}
+.lead{color:var(--muted);font-size:19px;max-width:700px;margin:0 auto 28px}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:14px 28px;border-radius:10px}
+.btn:hover{opacity:.92}
+.btn.alt2{background:transparent;color:var(--text);border:1px solid var(--line);margin-left:8px}
+.note{color:var(--muted);font-size:14px}
+.mock{margin:44px auto 0;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mock .bar{font-size:13px;color:var(--muted);margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:14px;gap:8px;flex-wrap:wrap}
+.row small{color:var(--muted)}
+.live{color:var(--ok);font-weight:600;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card p{margin:0;color:var(--muted)}
+.ico{font-size:26px;margin-bottom:8px}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.step::before{counter-increment:s;content:counter(s);display:inline-flex;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;align-items:center;justify-content:center;margin-bottom:10px}
+.step p{margin:0;color:var(--muted)}
+.price{max-width:520px;margin:0 auto;text-align:center}
+.price ul{list-style:none;padding:0;margin:16px 0 22px;text-align:left;display:inline-block}
+.price li{padding:3px 0}
+.price li::before{content:"✓ ";color:var(--ok);font-weight:700}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:10px auto;max-width:760px}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:10px 0 0}
+.center{text-align:center}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
+@media (max-width:520px){.btn.alt2{margin:10px 0 0}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<a class="logo" href="#top">Live<b>Outputs</b></a>
+<div class="links">
+<a href="#features">Funciones</a><a href="#usecases">Casos de uso</a><a href="#how">Cómo funciona</a><a href="#pricing">Precio</a><a href="#faq">Preguntas</a>
+<a class="lang" href="../">English</a>
+<a class="cta" href="#download">Descargar</a>
+</div></div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+<h1>Un destino de directo distinto para <em>cada escena</em> o <em>cada fuente</em> de OBS Studio</h1>
+<p class="lead">LiveOutputs es un plugin para OBS Studio. Envía cada escena o fuente a sus propios destinos RTMP, RTMPS o SRT, de forma independiente, sin tocar tu directo principal ni tu grabación.</p>
+<a class="btn" href="#download">Descargar prueba gratuita de 14 días</a>
+<a class="btn alt2" href="#features">Ver funciones</a>
+<p class="note">Versión completa durante la prueba. Sin cuenta y sin tarjeta. Windows 10/11.</p>
+<div class="mock" aria-hidden="true">
+<div class="bar">Panel LiveOutputs</div>
+<div class="row"><span><b>Cámara 1</b> <small>(fuente)</small></span><span class="live">● 2 en directo</span></div>
+<div class="row"><span>Plataforma A · RTMPS</span><small>4.1 Mbps</small></div>
+<div class="row"><span>Plataforma B · SRT</span><small>3.9 Mbps</small></div>
+<div class="row"><span><b>Escena vertical</b> <small>(1080×1920)</small></span><span class="live">● 1 en directo</span></div>
+<div class="row"><span>Plataforma móvil · RTMP</span><small>4.0 Mbps</small></div>
+</div>
+</div></header>
+
+<section class="alt" id="features"><div class="wrap">
+<h2>Todo para emitir a varias plataformas con control</h2>
+<p class="sub">Pensado para streamers y equipos de producción que quieren que cada plataforma reciba la imagen adecuada.</p>
+<div class="grid">
+<div class="card"><div class="ico">🎯</div><h3>Una entrada, sus propias salidas</h3><p>Cada entrada es una escena o una fuente suelta, y cada una tiene su lista de destinos. Emite una cámara a una plataforma y la escena completa a otra, a la vez.</p></div>
+<div class="card"><div class="ico">📡</div><h3>RTMP, RTMPS y SRT</h3><p>Pega la dirección y la clave. Plantillas listas para las plataformas habituales. SRT admite Stream ID y contraseña.</p></div>
+<div class="card"><div class="ico">📱</div><h3>Vertical y tamaños propios</h3><p>Emite una versión vertical 1080×1920 de una escena para plataformas móviles mientras tu directo principal sigue en horizontal.</p></div>
+<div class="card"><div class="ico">🔀</div><h3>Seguir la escena en directo</h3><p>Haz que una entrada siga la escena que OBS tenga en directo, con tus equivalencias de escena a escena. Cambia sin cortar la emisión.</p></div>
+<div class="card"><div class="ico">🔁</div><h3>Reconexión automática</h3><p>Si un destino se cae, LiveOutputs sigue intentándolo y muestra un aviso claro con el tiempo de corte; cuando se recupera, te lo dice.</p></div>
+<div class="card"><div class="ico">📊</div><h3>Bitrate en vivo y vista previa</h3><p>Mira el bitrate real y los fotogramas perdidos de cada destino, y previsualiza exactamente lo que envía cada entrada.</p></div>
+<div class="card"><div class="ico">⚙️</div><h3>Tu codificador, tus ajustes</h3><p>Elige tarjeta gráfica (NVENC y otros) o CPU x264, con las mismas opciones avanzadas que ofrece OBS. Guarda perfiles de calidad y audio y reutilízalos.</p></div>
+<div class="card"><div class="ico">🛡️</div><h3>Seguro por diseño</h3><p>Nada se emite solo al abrir OBS. Tu configuración nunca se sobrescribe si no se puede leer.</p></div>
+</div></div></section>
+
+<section id="usecases"><div class="wrap">
+<h2>Emite cada fuente por separado en OBS</h2>
+<p class="sub">Tres búsquedas habituales, resueltas con un solo plugin.</p>
+<div class="grid"><div class="card"><h3>Emitir una fuente individual por RTMP en OBS</h3><p>Elige una cámara, captura o fuente multimedia y envía solo esa fuente a su propio destino RTMP o RTMPS, sin tener que meterla antes en una escena.</p></div><div class="card"><h3>Enviar escenas diferentes a cada plataforma</h3><p>Dale a cada plataforma su propia escena: el diseño completo a una, una cámara limpia a otra y una versión vertical a una tercera, todo a la vez.</p></div><div class="card"><h3>Sacar señal limpia (clean feed) por RTMP o SRT</h3><p>Genera una señal limpia de una fuente o escena, sin gráficos, por RTMP o SRT para un invitado, un realizador o una segunda sala.</p></div></div></div></section>
+
+<section class="alt" id="how"><div class="wrap">
+<h2>Cómo funciona</h2>
+<p class="sub">En marcha en pocos minutos.</p>
+<div class="steps">
+<div class="step"><h3>Instala</h3><p>Ejecuta el instalador y reinicia OBS Studio.</p></div>
+<div class="step"><h3>Abre el panel</h3><p>Ve a <em>Paneles → LiveOutputs</em>.</p></div>
+<div class="step"><h3>Añade una entrada</h3><p>Pulsa <em>Añadir entrada</em>, elige una escena o fuente y añade sus destinos.</p></div>
+<div class="step"><h3>Emite</h3><p>Pulsa <em>Emitir</em> en cada destino cuando quieras.</p></div>
+</div></div></section>
+
+<section id="pricing"><div class="wrap">
+<h2>Precio</h2>
+<p class="sub">Prueba todo primero. El precio se anunciará en el lanzamiento.</p>
+<div class="card price">
+<h3>Prueba gratuita de 14 días</h3>
+<ul>
+<li>Todas las funciones incluidas</li>
+<li>Sin cuenta y sin tarjeta</li>
+<li>Después, una clave de licencia lo mantiene activo</li>
+</ul><br>
+<a class="btn" href="mailto:liveoutputs@protonmail.com?subject=Lista%20de%20espera%20LiveOutputs">Apuntarme a la lista de espera</a>
+<p class="note">Entérate el primero del precio y la fecha.</p>
+</div></div></section>
+
+<section class="alt" id="download"><div class="wrap center">
+<h2>Descarga</h2>
+<p class="sub">Windows 10/11 (64 bits) y OBS Studio 31 o superior.</p>
+<a class="btn" href="../LiveOutputs-1.0.0-Setup.exe">Descargar LiveOutputs 1.0.0 (Windows)</a>
+<p class="note"><strong>Windows puede mostrar un aviso de «editor desconocido»</strong> al ejecutar el instalador, porque el plugin todavía no está firmado digitalmente. Elige «Más información → Ejecutar de todas formas». La firma de código llegará en una versión posterior.</p>
+</div></section>
+
+<section id="faq"><div class="wrap">
+<h2>Preguntas</h2><p class="sub">&nbsp;</p>
+<details><summary>¿Afecta a mi directo principal o a mi grabación?</summary><p>No. Cada entrada tiene su propio circuito independiente, así que tu directo y tu grabación no se tocan.</p></details>
+<details><summary>¿Gasta mucha CPU o tarjeta gráfica?</summary><p>Cada entrada activa codifica su propio vídeo, así que el consumo crece con el número de entradas. Puedes elegir codificador de tarjeta gráfica (NVENC y otros) para liberar la CPU.</p></details>
+<details><summary>¿Qué pasa al acabar la prueba?</summary><p>Las emisiones se detienen hasta que introduzcas una clave de licencia. Tu configuración sigue guardada.</p></details>
+<details><summary>¿A qué plataformas puedo emitir?</summary><p>A cualquiera que acepte RTMP, RTMPS o SRT, con la dirección y la clave que te den.</p></details>
+<details><summary>¿Necesita cuenta o internet para activarse?</summary><p>No. Las claves se comprueban en tu ordenador; no hace falta cuenta ni servidor.</p></details>
+</div></section>
+
+<footer><div class="wrap">
+<p>LiveOutputs es un plugin independiente para OBS Studio. No está afiliado, respaldado ni patrocinado por el proyecto OBS. «OBS» y «OBS Studio» se usan solo para describir la compatibilidad.</p>
+<p>Contacto: <a href="mailto:liveoutputs@protonmail.com">liveoutputs@protonmail.com</a>. LiveOutputs se distribuye bajo licencia GPL; el código fuente está disponible bajo petición.</p>
+</div></footer>
+</body>
+</html>
