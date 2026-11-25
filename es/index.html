@@ -226,7 +226,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 <li>Sin cuenta y sin tarjeta</li>
 <li>Después, una clave de licencia lo mantiene activo</li>
 </ul><br>
-<a class="btn" href="mailto:liveoutputs@protonmail.com?subject=Lista%20de%20espera%20LiveOutputs">Apuntarme a la lista de espera</a>
+<a class="btn" id="waitlist" href="#contact">Apuntarme a la lista de espera</a>
 <p class="note">Entérate el primero del precio y la fecha.</p>
 </div></div></section>
 
@@ -268,5 +268,6 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 <p>Contacto: <a href="mailto:liveoutputs@protonmail.com">liveoutputs@protonmail.com</a>. LiveOutputs se distribuye bajo licencia GPL; el código fuente está disponible bajo petición.</p>
 </div></footer>
 <script>/*CTJS*/(function(){var f=document.getElementById("cform");if(!f)return;var b=document.getElementById("c-send"),s=document.getElementById("c-status");f.addEventListener("submit",function(e){e.preventDefault();s.className="msg";s.textContent="";if(f.botcheck.checked)return;if(!f.message.value.trim()){s.className="msg err";s.textContent='Escribe un mensaje, por favor.';return;}b.disabled=true;var old=b.textContent;b.textContent='Enviando...';var d={};new FormData(f).forEach(function(v,k){d[k]=v;});fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(d)}).then(function(r){return r.json();}).then(function(j){if(j&&j.success){f.reset();s.className="msg ok";s.textContent='¡Gracias! Hemos recibido tu mensaje.';}else{throw new Error("x");}}).catch(function(){s.className="msg err";s.textContent='No se ha podido enviar. Inténtalo más tarde o escribe a liveoutputs@protonmail.com.';}).finally(function(){b.disabled=false;b.textContent=old;});});})();/*ENDCTJS*/</script>
+<script>/*WLJS*/(function(){var a=document.getElementById("waitlist"),f=document.getElementById("cform");if(!a||!f)return;a.addEventListener("click",function(e){e.preventDefault();var c=document.getElementById("contact");if(c)c.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});var m=f.message;if(m&&!m.value.trim())m.value='Estoy interesado en LiveOutputs. Apúntame a la lista de espera.';if(f.subject)f.subject.value='LiveOutputs: LISTA DE ESPERA';setTimeout(function(){var em=document.getElementById("c-mail");if(em)em.focus({preventScroll:true});},500);});})();/*ENDWLJS*/</script>
 </body>
 </html>
