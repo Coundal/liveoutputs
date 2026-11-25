@@ -141,7 +141,19 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 .note2{font-size:12px;color:var(--muted);text-align:center;margin:22px 0 0}
 @media (max-width:760px){.flow{grid-template-columns:1fr;row-gap:6px;justify-items:center}.flow .arrows{transform:rotate(90deg);margin:26px 0}.sim{grid-column:1;width:100%}.feeds{flex-direction:column;align-items:center}.pair{grid-template-columns:1fr}.scr.tall{height:300px}}
 @media (prefers-reduced-motion:reduce){.ex{transition:none}.ex:hover{transform:none}}
-/*ENDEX*/</style>
+/*ENDEX*//*CT*/
+#contact .cform{max-width:620px;margin:0 auto}
+#contact label{display:block;font-weight:600;margin:14px 0 6px}
+#contact input,#contact textarea{width:100%;box-sizing:border-box;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit}
+#contact input:focus,#contact textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+#contact textarea{min-height:130px;resize:vertical}
+#contact .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+#contact button.btn{border:0;cursor:pointer;font:inherit;font-weight:700;margin-top:18px}
+#contact button.btn:disabled{opacity:.6;cursor:wait}
+#contact .msg{margin-top:14px;font-weight:600}
+#contact .msg.ok{color:var(--ok)}
+#contact .msg.err{color:#d6453d}
+/*ENDCT*/</style>
 </head>
 <body>
 <nav><div class="wrap">
@@ -235,9 +247,26 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 <details><summary>Does it need an account or internet to activate?</summary><p>No. License keys are checked on your computer; no account and no server are needed.</p></details>
 </div></section>
 
+<section class="alt" id="contact"><div class="wrap">
+<h2>Leave a message</h2>
+<p class="sub">Questions, ideas or want to know when it launches? Write here. No account needed.</p>
+<form class="cform" id="cform" novalidate>
+<input type="hidden" name="access_key" value="307a8699-4f6e-4fb4-8512-08d55d6e4649">
+<input type="hidden" name="subject" value="LiveOutputs: new message from the website">
+<input type="hidden" name="from_name" value="LiveOutputs web">
+<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+<label for="c-name">Name (optional)</label><input id="c-name" name="name" type="text" maxlength="80" autocomplete="name">
+<label for="c-mail">Your email (optional, only if you want a reply)</label><input id="c-mail" name="email" type="email" maxlength="120" autocomplete="email">
+<label for="c-msg">Message</label><textarea id="c-msg" name="message" maxlength="2000" required></textarea>
+<button class="btn" type="submit" id="c-send">Send</button>
+<p class="msg" id="c-status" role="status" aria-live="polite"></p>
+<p class="note">We only use your message and email to reply to you. We do not share them.</p>
+</form></div></section>
+
 <footer><div class="wrap">
 <p>LiveOutputs is an independent plugin for OBS Studio. It is not affiliated with, endorsed by or sponsored by the OBS Project. “OBS” and “OBS Studio” are used only to describe compatibility.</p>
 <p>Contact: <a href="mailto:liveoutputs@protonmail.com">liveoutputs@protonmail.com</a>. LiveOutputs is released under the GPL; the source code is available on request.</p>
 </div></footer>
+<script>/*CTJS*/(function(){var f=document.getElementById("cform");if(!f)return;var b=document.getElementById("c-send"),s=document.getElementById("c-status");f.addEventListener("submit",function(e){e.preventDefault();s.className="msg";s.textContent="";if(f.botcheck.checked)return;if(!f.message.value.trim()){s.className="msg err";s.textContent='Please write a message.';return;}b.disabled=true;var old=b.textContent;b.textContent='Sending...';var d={};new FormData(f).forEach(function(v,k){d[k]=v;});fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(d)}).then(function(r){return r.json();}).then(function(j){if(j&&j.success){f.reset();s.className="msg ok";s.textContent='Thanks! Your message has been received.';}else{throw new Error("x");}}).catch(function(){s.className="msg err";s.textContent='It could not be sent. Please try again later or write to liveoutputs@protonmail.com.';}).finally(function(){b.disabled=false;b.textContent=old;});});})();/*ENDCTJS*/</script>
 </body>
 </html>
