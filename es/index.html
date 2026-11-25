@@ -11,7 +11,11 @@
 <meta property="og:title" content="Emitir cada fuente o escena de OBS por su propio RTMP/SRT | LiveOutputs">
 <meta property="og:description" content="Plugin para OBS Studio: emite una fuente individual por RTMP o envía escenas diferentes a cada plataforma (RTMP, RTMPS, SRT). Señal limpia (clean feed) independiente, medidor de bitrate y reconexión. Prueba gratis 14 días.">
 <meta property="og:locale" content="es_ES">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://coundal.github.io/liveoutputs/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://coundal.github.io/liveoutputs/img/og.png">
 <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "LiveOutputs", "applicationCategory": "MultimediaApplication", "operatingSystem": "Windows 10, Windows 11", "description": "Plugin para OBS Studio que envía cada escena o fuente a sus propios destinos RTMP, RTMPS o SRT, de forma independiente.", "inLanguage": "es"}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Afecta a mi directo principal o a mi grabación?", "acceptedAnswer": {"@type": "Answer", "text": "No. Cada entrada tiene su propio circuito independiente, así que tu directo y tu grabación no se tocan."}}, {"@type": "Question", "name": "¿Gasta mucha CPU o tarjeta gráfica?", "acceptedAnswer": {"@type": "Answer", "text": "Cada entrada activa codifica su propio vídeo, así que el consumo crece con el número de entradas. Puedes elegir codificador de tarjeta gráfica (NVENC y otros) para liberar la CPU."}}, {"@type": "Question", "name": "¿Qué pasa al acabar la prueba?", "acceptedAnswer": {"@type": "Answer", "text": "Las emisiones se detienen hasta que introduzcas una clave de licencia. Tu configuración sigue guardada."}}, {"@type": "Question", "name": "¿A qué plataformas puedo emitir?", "acceptedAnswer": {"@type": "Answer", "text": "A cualquiera que acepte RTMP, RTMPS o SRT, con la dirección y la clave que te den."}}, {"@type": "Question", "name": "¿Necesita cuenta o internet para activarse?", "acceptedAnswer": {"@type": "Answer", "text": "No. Las claves se comprueban en tu ordenador; no hace falta cuenta ni servidor."}}]}]</script>
 <link rel="canonical" href="https://coundal.github.io/liveoutputs/es/">
 <link rel="alternate" hreflang="en" href="https://coundal.github.io/liveoutputs/">
@@ -72,13 +76,78 @@ details p{color:var(--muted);margin:10px 0 0}
 .center{text-align:center}
 footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
 @media (max-width:520px){.btn.alt2{margin:10px 0 0}}
-</style>
+.shot{display:block;margin:44px auto 0;width:auto;height:auto;max-height:560px;max-width:100%;border-radius:14px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.wide{display:block;margin:0 auto;max-width:100%;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.post{max-width:760px;margin:0 auto;padding:48px 16px 24px}
+.post h1{font-size:clamp(28px,4.5vw,40px)}
+.post h2{text-align:left;font-size:24px;margin:34px 0 8px}
+.post ol,.post ul{color:var(--text);padding-left:22px}
+.post li{margin:6px 0}
+.post p{color:var(--text)}
+.cta-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin:40px 0;text-align:center}
+.cta-box p{color:var(--muted)}
+.crumbs{font-size:14px;color:var(--muted)}
+.list{display:grid;gap:16px;margin-top:28px}
+.list a.card{text-decoration:none;color:inherit;display:block}
+.list a.card:hover{border-color:var(--accent)}
+.frame{max-width:1040px;margin:48px auto 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);box-shadow:0 30px 80px rgba(79,140,255,.18),0 10px 30px rgba(0,0,0,.35);transition:transform .35s ease,box-shadow .35s ease}
+.frame:hover{transform:scale(1.025);box-shadow:0 40px 100px rgba(124,92,255,.28),0 14px 40px rgba(0,0,0,.4)}
+.frame .dots{display:flex;gap:7px;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--line)}
+.frame .dots i{width:11px;height:11px;border-radius:50%;background:var(--line)}
+.frame img{display:block;width:100%;height:auto}
+.card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-4px) scale(1.02);border-color:var(--accent);box-shadow:0 14px 34px rgba(0,0,0,.22)}
+.step{transition:transform .25s ease}.step:hover{transform:translateY(-3px) scale(1.02)}
+@media (prefers-reduced-motion:reduce){.frame,.card,.step{transition:none}.frame:hover,.card:hover,.step:hover{transform:none}}
+/*EX*/
+.ex-grid{display:grid;gap:22px;margin-top:8px}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.ex:hover{transform:translateY(-3px) scale(1.01);border-color:var(--accent);box-shadow:0 16px 40px rgba(0,0,0,.22)}
+.ex h3{margin:0 0 4px;font-size:20px}
+.ex>p{margin:0 0 20px;color:var(--muted)}
+.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.flow{display:grid;grid-template-columns:auto 96px 1fr;column-gap:18px;align-items:center}
+.obsbox{border:2px solid transparent;border-radius:18px;padding:28px 26px;text-align:center;line-height:1;background:linear-gradient(var(--bg2),var(--bg2)) padding-box,linear-gradient(135deg,var(--accent),var(--accent2)) border-box;box-shadow:0 10px 30px rgba(79,140,255,.18)}
+.obsbox b{display:block;font-size:34px;font-weight:900;letter-spacing:.02em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.obsbox small{display:block;margin-top:10px;font-size:12px;font-weight:600;letter-spacing:0;color:var(--muted)}
+.flow .arrows{width:96px;height:22px}
+.feeds{display:flex;gap:26px;align-items:flex-end;justify-content:center}
+.feeds .side:first-child{flex:1 1 0;max-width:420px}
+.sim{grid-column:3;display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px}
+.sim .br{width:92%;height:12px;border:2px solid var(--accent);border-top:none;border-radius:0 0 12px 12px;opacity:.8}
+.sim span{font-weight:900;letter-spacing:.08em;text-transform:uppercase;font-size:14px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.side{display:flex;flex-direction:column;align-items:center;gap:12px}
+.scr{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0b0d12;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.scr svg{display:block;width:100%;height:100%}
+.scr.wide{width:100%;max-width:420px;aspect-ratio:16/9}
+.scr.tall{height:236px;aspect-ratio:9/16;border-radius:22px;border:3px solid var(--line)}
+.live{position:absolute;left:8px;top:8px;background:#e5484d;color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.05em}
+.kbps{position:absolute;right:8px;top:8px;background:rgba(0,0,0,.6);color:#7ee787;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px}
+.meta{text-align:center;font-size:14px;color:var(--muted)}
+.meta b{display:block;color:var(--text);font-size:16px}
+.chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.chip{border:1px solid var(--line);background:var(--bg2);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted)}
+.hub{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:13px;text-align:center}
+.hub .core{width:92px;border:1px solid var(--line);background:var(--bg2);border-radius:14px;padding:12px 6px}
+.hub .core svg{width:44px;height:44px;display:block;margin:0 auto 4px}
+.arrows{width:110px;height:18px}
+.proto{width:100%;height:auto;display:block}
+.proto text{fill:var(--text);font:600 14px system-ui,sans-serif}
+.proto .sub{fill:var(--muted);font:12px system-ui,sans-serif}
+.proto .box{fill:var(--bg2);stroke:var(--line)}
+.proto .ln{stroke:var(--accent);stroke-width:2;fill:none;stroke-dasharray:5 5}
+.proto .ic{stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.note2{font-size:12px;color:var(--muted);text-align:center;margin:22px 0 0}
+@media (max-width:760px){.flow{grid-template-columns:1fr;row-gap:6px;justify-items:center}.flow .arrows{transform:rotate(90deg);margin:26px 0}.sim{grid-column:1;width:100%}.feeds{flex-direction:column;align-items:center}.pair{grid-template-columns:1fr}.scr.tall{height:300px}}
+@media (prefers-reduced-motion:reduce){.ex{transition:none}.ex:hover{transform:none}}
+/*ENDEX*/</style>
 </head>
 <body>
 <nav><div class="wrap">
 <a class="logo" href="#top">Live<b>Outputs</b></a>
 <div class="links">
-<a href="#features">Funciones</a><a href="#usecases">Casos de uso</a><a href="#how">Cómo funciona</a><a href="#pricing">Precio</a><a href="#faq">Preguntas</a>
+<a href="#examples">Ejemplos</a><a href="#features">Funciones</a><a href="#usecases">Casos de uso</a><a href="#how">Cómo funciona</a><a href="#pricing">Precio</a><a href="blog/">Blog</a><a href="#faq">Preguntas</a>
 <a class="lang" href="../">English</a>
 <a class="cta" href="#download">Descargar</a>
 </div></div></nav>
@@ -89,15 +158,17 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 <a class="btn" href="#download">Descargar prueba gratuita de 14 días</a>
 <a class="btn alt2" href="#features">Ver funciones</a>
 <p class="note">Versión completa durante la prueba. Sin cuenta y sin tarjeta. Windows 10/11.</p>
-<div class="mock" aria-hidden="true">
-<div class="bar">Panel LiveOutputs</div>
-<div class="row"><span><b>Cámara 1</b> <small>(fuente)</small></span><span class="live">● 2 en directo</span></div>
-<div class="row"><span>Plataforma A · RTMPS</span><small>4.1 Mbps</small></div>
-<div class="row"><span>Plataforma B · SRT</span><small>3.9 Mbps</small></div>
-<div class="row"><span><b>Escena vertical</b> <small>(1080×1920)</small></span><span class="live">● 1 en directo</span></div>
-<div class="row"><span>Plataforma móvil · RTMP</span><small>4.0 Mbps</small></div>
-</div>
+<div class="frame"><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div><img src="../img/obs-es.jpg" width="1920" height="1009" alt="OBS Studio con el panel LiveOutputs acoplado, enviando una fuente y dos escenas a destinos distintos, con bitrate en vivo y vista previa"></div>
 </div></header>
+
+<section id="examples"><div class="wrap">
+<h2>Qué puedes hacer</h2>
+<p class="sub">Algunos montajes reales, dibujados a escala: lo que recibe de verdad cada destino.</p>
+<div class="ex-grid">
+<div class="ex"><span class="tag">Multistream</span><h3>Un mismo directo, un formato distinto para cada plataforma</h3><p>Envía el diseño completo en 16:9 a una plataforma y una versión vertical 9:16 a otra, a la vez, desde el mismo OBS.</p><div class="flow"><div class="obsbox"><b>OBS</b><small>Tu escena</small></div><svg class="arrows" viewBox="0 0 110 18" aria-hidden="true"><path d="M4 9 H104 M94 3 L106 9 L94 15" stroke="var(--accent)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="feeds"><div class="side"><div class="scr wide"><span class="live">LIVE</span><span class="kbps">4.4 Mbps</span><svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gwa" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a55"/><stop offset="1" stop-color="#5b2a86"/></linearGradient></defs><rect width="160" height="90" fill="url(#gwa)"/><rect x="8" y="14" width="100" height="62" rx="4" fill="#0e1424" opacity=".75"/><path d="M14 66 L38 40 L56 56 L74 32 L102 66 Z" fill="#2f6bff" opacity=".85"/><circle cx="90" cy="28" r="7" fill="#ffd166"/><rect x="114" y="14" width="38" height="62" rx="4" fill="#0e1424" opacity=".6"/><rect x="118" y="20" width="30" height="4" rx="2" fill="#9aa3b2"/><rect x="118" y="28" width="22" height="4" rx="2" fill="#9aa3b2"/><rect x="118" y="36" width="28" height="4" rx="2" fill="#9aa3b2"/><rect x="104" y="48" width="48" height="30" rx="4" fill="#1d2233" stroke="#4f8cff" stroke-width="1"/><circle cx="128" cy="60" r="6" fill="#f2c9a0"/><path d="M116 78 Q128 62 140 78 L140 78 L116 78 Z" fill="#4f8cff"/><rect x="8" y="78" width="96" height="8" rx="2" fill="#e5484d" opacity=".9"/></svg></div><div class="meta"><b>Twitch</b>1920×1080 · 16:9<div class="chips"><span class="chip">RTMPS</span><span class="chip">Diseño completo</span></div></div></div><div class="side"><div class="scr tall"><span class="live">LIVE</span><span class="kbps">3.9 Mbps</span><svg viewBox="0 0 90 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5fa2"/><stop offset="1" stop-color="#4f3bd9"/></linearGradient></defs><rect width="90" height="160" fill="url(#gt)"/><circle cx="45" cy="62" r="17" fill="#f2c9a0"/><path d="M14 150 Q45 84 76 150 L76 150 L14 150 Z" fill="#ffffff"/><rect x="10" y="132" width="70" height="9" rx="4" fill="#000" opacity=".35"/><rect x="10" y="146" width="48" height="6" rx="3" fill="#000" opacity=".25"/></svg></div><div class="meta"><b>TikTok</b>1080×1920 · 9:16<div class="chips"><span class="chip">RTMP</span><span class="chip">Cámara en vertical</span></div></div></div></div><div class="sim"><div class="br"></div><span>Dos señales a la vez</span></div></div><p class="note2">Los nombres de plataformas son ejemplos. Pertenecen a sus dueños y no están afiliados a LiveOutputs.</p></div>
+<div class="ex"><span class="tag">Protocolos</span><h3>Hasta tres protocolos distintos en la misma entrada</h3><p>Combina RTMP, RTMPS y SRT libremente. Cada destino tiene su dirección, su clave y su estado.</p><svg class="proto" viewBox="0 24 580 216" role="img" aria-label="Una fuente de cámara conectada a tres destinos: RTMP, RTMPS y SRT"><path class="ln" d="M150 108 C 215 108, 235 60, 300 60"/><rect class="box" x="300" y="34" width="270" height="52" rx="12"/><g class="ic"><circle cx="328" cy="60" r="3"/><path d="M322 68 a8 8 0 0 1 0 -16"/><path d="M334 68 a8 8 0 0 0 0 -16"/><path d="M318 73 a13 13 0 0 1 0 -26" opacity=".5"/><path d="M338 73 a13 13 0 0 0 0 -26" opacity=".5"/></g><text x="358" y="57">RTMP</text><text class="sub" x="358" y="74">La mayoría de plataformas</text><path class="ln" d="M150 108 C 215 108, 235 134, 300 134"/><rect class="box" x="300" y="108" width="270" height="52" rx="12"/><g class="ic"><rect x="319" y="131" width="18" height="13" rx="3"/><path d="M323 131 v-4 a5 5 0 0 1 10 0 v4"/></g><text x="358" y="131">RTMPS</text><text class="sub" x="358" y="148">RTMP cifrado</text><path class="ln" d="M150 108 C 215 108, 235 208, 300 208"/><rect class="box" x="300" y="182" width="270" height="52" rx="12"/><g class="ic"><path d="M328 194 l11 4 v9 c0 8 -6 12 -11 14 c-5 -2 -11 -6 -11 -14 v-9 z"/><path d="M322 209 l4 4 l7 -8"/></g><text x="358" y="205">SRT</text><text class="sub" x="358" y="222">Baja latencia y resistente</text><rect class="box" x="8" y="74" width="142" height="68" rx="14"/><g transform="translate(20 84) scale(.9)" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="12" width="26" height="20" rx="4"/><path d="M30 20 L40 14 V30 L30 24"/><circle cx="17" cy="22" r="4.5"/></g><text x="20" y="130" style="font-size:13px">ENTRADA DE OBS</text></svg></div>
+<div class="ex"><span class="tag">Señal limpia</span><h3>El directo completo sale, la imagen limpia va al realizador</h3><p>Tu audiencia ve los gráficos. Un invitado, un realizador o una segunda sala recibe la misma imagen sin ellos.</p><div class="pair"><div class="side"><div class="scr wide"><span class="live">LIVE</span><svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gwc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a55"/><stop offset="1" stop-color="#5b2a86"/></linearGradient></defs><rect width="160" height="90" fill="url(#gwc1)"/><rect x="8" y="14" width="100" height="62" rx="4" fill="#0e1424" opacity=".75"/><path d="M14 66 L38 40 L56 56 L74 32 L102 66 Z" fill="#2f6bff" opacity=".85"/><circle cx="90" cy="28" r="7" fill="#ffd166"/><rect x="114" y="14" width="38" height="62" rx="4" fill="#0e1424" opacity=".6"/><rect x="118" y="20" width="30" height="4" rx="2" fill="#9aa3b2"/><rect x="118" y="28" width="22" height="4" rx="2" fill="#9aa3b2"/><rect x="118" y="36" width="28" height="4" rx="2" fill="#9aa3b2"/><rect x="104" y="48" width="48" height="30" rx="4" fill="#1d2233" stroke="#4f8cff" stroke-width="1"/><circle cx="128" cy="60" r="6" fill="#f2c9a0"/><path d="M116 78 Q128 62 140 78 L140 78 L116 78 Z" fill="#4f8cff"/><rect x="8" y="78" width="96" height="8" rx="2" fill="#e5484d" opacity=".9"/></svg></div><div class="meta"><b>Directo principal</b>Con gráficos</div></div><div class="side"><div class="scr wide"><span class="live">LIVE</span><svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gwc2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a55"/><stop offset="1" stop-color="#5b2a86"/></linearGradient></defs><rect width="160" height="90" fill="url(#gwc2)"/><rect x="8" y="14" width="100" height="62" rx="4" fill="#0e1424" opacity=".75"/><path d="M14 66 L38 40 L56 56 L74 32 L102 66 Z" fill="#2f6bff" opacity=".85"/><circle cx="90" cy="28" r="7" fill="#ffd166"/><rect x="114" y="14" width="38" height="62" rx="4" fill="#0e1424" opacity=".6"/><rect x="118" y="20" width="30" height="4" rx="2" fill="#9aa3b2"/><rect x="118" y="28" width="22" height="4" rx="2" fill="#9aa3b2"/><rect x="118" y="36" width="28" height="4" rx="2" fill="#9aa3b2"/><rect x="104" y="48" width="48" height="30" rx="4" fill="#1d2233" stroke="#4f8cff" stroke-width="1"/><circle cx="128" cy="60" r="6" fill="#f2c9a0"/><path d="M116 78 Q128 62 140 78 L140 78 L116 78 Z" fill="#4f8cff"/></svg></div><div class="meta"><b>Señal limpia</b>Sin gráficos · SRT</div></div></div></div>
+</div></div></section>
 
 <section class="alt" id="features"><div class="wrap">
 <h2>Todo para emitir a varias plataformas con control</h2>
